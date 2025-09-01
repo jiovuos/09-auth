@@ -16,7 +16,9 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  const cookieHeader = cookies().toString();
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+
   const user = await serverGetMe(cookieHeader);
 
   return (

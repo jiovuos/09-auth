@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
-import type { FetchNotesResponse } from "@/lib/api";
-import { fetchNotes } from "@/lib/api";
+import type { FetchNotesResponse } from "@/lib/api/clientApi";
+import { fetchNotes } from "@/lib/api/clientApi";
 import NoteList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
@@ -23,7 +23,7 @@ export default function NotesClient({
   initialPage,
   initialSearch,
   initialNotes,
-  tag,
+  tag
 }: NotesClientProps) {
   const [search, setSearch] = useState(initialSearch);
   const [debouncedSearch] = useDebounce(search, 500);
@@ -36,13 +36,13 @@ export default function NotesClient({
         page,
         perPage: 6,
         search: debouncedSearch,
-        tag: tag === "All" ? undefined : (tag as NoteTag),
+        tag: tag === "All" ? undefined : (tag as NoteTag)
       }),
     placeholderData: (prev) => prev,
     initialData:
       page === initialPage && debouncedSearch === initialSearch && tag === "All"
         ? initialNotes
-        : undefined,
+        : undefined
   });
 
   const totalPages = data?.totalPages ?? 1;

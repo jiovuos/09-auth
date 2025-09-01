@@ -1,19 +1,34 @@
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient,
+  QueryClient
 } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
-import { fetchNotes, type FetchNotesResponse } from "@/lib/api";
+import {
+  serverFetchNotes,
+  type ServerFetchNotesResponse
+} from "@/lib/api/serverApi";
 import type { NoteTag } from "@/types/note";
 import NotesClient from "./Notes.client";
+import { cookies } from "next/headers";
 import type { Metadata } from "next";
 
 type PageProps = {
   params?: Promise<{ slug?: string[] }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+async function buildCookieHeader(): Promise<string> {
+  const cookieStore = await cookies();
+  const all = cookieStore.getAll ? cookieStore.getAll() : [];
+  if (!all || all.length === 0) return "";
+  return all
+    .map((c: { name: string; value: string }) => `${c.name}=${c.value}`)
+    .join("; ");
+}
+
+export async function generateMetadata({
+  params
+}: PageProps): Promise<Metadata> {
   const resolved = await Promise.resolve(params);
   const slug = resolved?.slug ?? [];
   const tag = slug[0] ?? "All";
@@ -24,11 +39,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: `Notes filtered by ${tag}`,
       description: `Browse notes filtered by ${tag} in NoteHub`,
-      url: `https://08-zustand.vercel.app/notes/filter/${tag}`,
-      images: [
-        "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
-      ],
-    },
+      url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/notes/filter/${tag}`,
+      images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"]
+    }
   };
 }
 
@@ -47,7 +60,7 @@ export default async function NotesFilterPage({ params }: PageProps) {
     "Personal",
     "Meeting",
     "Shopping",
-    "All",
+    "All"
   ];
 
   if (!validTags.includes(currentTag as NoteTag | "All")) {
@@ -59,18 +72,23 @@ export default async function NotesFilterPage({ params }: PageProps) {
   const tagParam: NoteTag | undefined =
     currentTag === "All" ? undefined : (currentTag as NoteTag);
 
+  const cookieHeader = await buildCookieHeader();
+
   const queryClient = new QueryClient();
 
-  const initialNotes: FetchNotesResponse = await fetchNotes({
-    page,
-    perPage: 6,
-    search,
-    tag: tagParam,
-  });
+  const initialNotes: ServerFetchNotesResponse = await serverFetchNotes(
+    {
+      page,
+      perPage: 6,
+      search,
+      tag: tagParam
+    },
+    cookieHeader
+  );
 
   await queryClient.prefetchQuery({
     queryKey: ["notes", page, search, currentTag],
-    queryFn: () => Promise.resolve(initialNotes),
+    queryFn: () => Promise.resolve(initialNotes)
   });
 
   return (

@@ -3,21 +3,32 @@ import {
   HydrationBoundary,
   QueryClient
 } from "@tanstack/react-query";
-import { fetchNoteById } from "@/lib/api";
 import NoteDetailsClient from "./NoteDetails.client";
+import { serverGetNote } from "@/lib/api/serverApi";
+import { cookies } from "next/headers";
 import type { Metadata } from "next";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
+async function buildCookieHeader(): Promise<string> {
+  const cookieStore = await cookies();
+  const all = cookieStore.getAll ? cookieStore.getAll() : [];
+  if (!all || all.length === 0) return "";
+  return all
+    .map((c: { name: string; value: string }) => `${c.name}=${c.value}`)
+    .join("; ");
+}
+
 export async function generateMetadata({
   params
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
+  const cookieHeader = await buildCookieHeader();
 
   try {
-    const note = await fetchNoteById(id);
+    const note = await serverGetNote(id, cookieHeader);
 
     const description =
       note.content && note.content.trim() !== ""
@@ -30,7 +41,7 @@ export async function generateMetadata({
       openGraph: {
         title: `${note.title} - NoteHub`,
         description,
-        url: `https://08-zustand.vercel.app/notes/${id}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/notes/${id}`,
         images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"]
       }
     };
@@ -41,7 +52,7 @@ export async function generateMetadata({
       openGraph: {
         title: "Note not found - NoteHub",
         description: "This note does not exist",
-        url: `https://08-zustand.vercel.app/notes/${id}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/notes/${id}`,
         images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"]
       }
     };
@@ -50,11 +61,12 @@ export async function generateMetadata({
 
 export default async function NoteDetailsPage({ params }: PageProps) {
   const { id } = await params;
+  const cookieHeader = await buildCookieHeader();
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["note", id],
-    queryFn: () => fetchNoteById(id)
+    queryFn: () => serverGetNote(id, cookieHeader)
   });
 
   return (
