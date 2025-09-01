@@ -1,12 +1,12 @@
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient
+  QueryClient,
 } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 import {
   serverFetchNotes,
-  type ServerFetchNotesResponse
+  type ServerFetchNotesResponse,
 } from "@/lib/api/serverApi";
 import type { NoteTag } from "@/types/note";
 import NotesClient from "./Notes.client";
@@ -27,7 +27,7 @@ async function buildCookieHeader(): Promise<string> {
 }
 
 export async function generateMetadata({
-  params
+  params,
 }: PageProps): Promise<Metadata> {
   const resolved = await Promise.resolve(params);
   const slug = resolved?.slug ?? [];
@@ -40,8 +40,8 @@ export async function generateMetadata({
       title: `Notes filtered by ${tag}`,
       description: `Browse notes filtered by ${tag} in NoteHub`,
       url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/notes/filter/${tag}`,
-      images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"]
-    }
+      images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+    },
   };
 }
 
@@ -60,7 +60,7 @@ export default async function NotesFilterPage({ params }: PageProps) {
     "Personal",
     "Meeting",
     "Shopping",
-    "All"
+    "All",
   ];
 
   if (!validTags.includes(currentTag as NoteTag | "All")) {
@@ -81,14 +81,14 @@ export default async function NotesFilterPage({ params }: PageProps) {
       page,
       perPage: 6,
       search,
-      tag: tagParam
+      tag: tagParam,
     },
-    cookieHeader
+    cookieHeader,
   );
 
   await queryClient.prefetchQuery({
     queryKey: ["notes", page, search, currentTag],
-    queryFn: () => Promise.resolve(initialNotes)
+    queryFn: () => Promise.resolve(initialNotes),
   });
 
   return (

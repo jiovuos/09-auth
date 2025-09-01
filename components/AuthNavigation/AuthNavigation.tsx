@@ -11,7 +11,9 @@ export default function AuthNavigation() {
   const { user, isAuthenticated, clearIsAuthenticated } = useAuthStore();
 
   const onLogout = async () => {
-    try { await clientAuthLogout(); } catch {}
+    try {
+      await clientAuthLogout();
+    } catch {}
     clearIsAuthenticated();
     router.push("/sign-in");
   };
@@ -26,7 +28,9 @@ export default function AuthNavigation() {
         </li>
         <li className={css.navigationItem}>
           <p className={css.userEmail}>{user.email}</p>
-          <button className={css.logoutButton} onClick={onLogout}>Logout</button>
+          <button className={css.logoutButton} onClick={onLogout}>
+            Logout
+          </button>
         </li>
       </>
     );

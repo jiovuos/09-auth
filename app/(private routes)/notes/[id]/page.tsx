@@ -1,7 +1,7 @@
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient
+  QueryClient,
 } from "@tanstack/react-query";
 import NoteDetailsClient from "./NoteDetails.client";
 import { serverGetNote } from "@/lib/api/serverApi";
@@ -22,7 +22,7 @@ async function buildCookieHeader(): Promise<string> {
 }
 
 export async function generateMetadata({
-  params
+  params,
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const cookieHeader = await buildCookieHeader();
@@ -42,8 +42,8 @@ export async function generateMetadata({
         title: `${note.title} - NoteHub`,
         description,
         url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/notes/${id}`,
-        images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"]
-      }
+        images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+      },
     };
   } catch {
     return {
@@ -53,8 +53,8 @@ export async function generateMetadata({
         title: "Note not found - NoteHub",
         description: "This note does not exist",
         url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/notes/${id}`,
-        images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"]
-      }
+        images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+      },
     };
   }
 }
@@ -66,7 +66,7 @@ export default async function NoteDetailsPage({ params }: PageProps) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["note", id],
-    queryFn: () => serverGetNote(id, cookieHeader)
+    queryFn: () => serverGetNote(id, cookieHeader),
   });
 
   return (

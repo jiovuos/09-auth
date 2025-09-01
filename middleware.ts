@@ -3,7 +3,8 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const isPrivate = pathname.startsWith("/profile") || pathname.startsWith("/notes");
+  const isPrivate =
+    pathname.startsWith("/profile") || pathname.startsWith("/notes");
   const isAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
   const accessToken = req.cookies.get("accessToken")?.value;
 

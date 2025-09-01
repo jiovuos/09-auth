@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { clientAuthSession, clientGetMe } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 
-export default function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [checking, setChecking] = useState(true);
   const setUser = useAuthStore((s) => s.setUser);
   const clear = useAuthStore((s) => s.clearIsAuthenticated);
@@ -28,7 +32,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     check();
   }, [setUser, clear]);
 
-  if (checking) return <div style={{ padding: 40, textAlign: "center" }}>Loading...</div>;
+  if (checking)
+    return <div style={{ padding: 40, textAlign: "center" }}>Loading...</div>;
 
   return <>{children}</>;
 }

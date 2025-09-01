@@ -54,7 +54,7 @@ export const fetchNotes = async (
     perPage?: number;
     search?: string;
     tag?: string;
-  } = {}
+  } = {},
 ): Promise<FetchNotesResponse> => {
   const res = await apiClient.get("/notes", { params });
   const payload = res.data;
@@ -64,7 +64,7 @@ export const fetchNotes = async (
       data: payload as Note[],
       totalPages: 1,
       page: 1,
-      perPage: payload.length
+      perPage: payload.length,
     };
   }
 
@@ -77,7 +77,7 @@ export const fetchNotes = async (
       data: payload.notes as Note[],
       totalPages: payload.totalPages ?? 1,
       page: payload.page ?? 1,
-      perPage: payload.perPage ?? (payload.notes ? payload.notes.length : 0)
+      perPage: payload.perPage ?? (payload.notes ? payload.notes.length : 0),
     };
   }
 
@@ -85,7 +85,7 @@ export const fetchNotes = async (
     data: [],
     totalPages: 1,
     page: 1,
-    perPage: 0
+    perPage: 0,
   };
 };
 

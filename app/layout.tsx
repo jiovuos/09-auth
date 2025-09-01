@@ -9,7 +9,7 @@ const roboto = Roboto({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
   variable: "--font-roboto",
-  display: "swap"
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -19,13 +19,13 @@ export const metadata: Metadata = {
     title: "NoteHub",
     description: "Notes made simple",
     url: "https://08-zustand.vercel.app",
-    images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"]
-  }
+    images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+  },
 };
 
 export default function RootLayout({
   children,
-  modal
+  modal,
 }: {
   children: React.ReactNode;
   modal: React.ReactNode;

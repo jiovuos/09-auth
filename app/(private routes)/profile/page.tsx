@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     title: "Profile - NoteHub",
     description: "User profile page",
     url: "https://example.com/profile",
-    images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"]
-  }
+    images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+  },
 };
 
 export default async function ProfilePage() {

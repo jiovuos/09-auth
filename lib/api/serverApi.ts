@@ -6,11 +6,11 @@ const baseURL = (process.env.NEXT_PUBLIC_API_URL ?? "") + "/api";
 
 // AUTH / SESSION
 export const serverGetSession = async (
-  cookieHeader?: string
+  cookieHeader?: string,
 ): Promise<User | null> => {
   const res = await axios.get(`${baseURL}/auth/session`, {
     headers: { Cookie: cookieHeader ?? "" },
-    withCredentials: true
+    withCredentials: true,
   });
   return res.data ?? null;
 };
@@ -19,18 +19,18 @@ export const serverGetSession = async (
 export const serverGetMe = async (cookieHeader?: string): Promise<User> => {
   const res = await axios.get(`${baseURL}/users/me`, {
     headers: { Cookie: cookieHeader ?? "" },
-    withCredentials: true
+    withCredentials: true,
   });
   return res.data as User;
 };
 
 export const serverPatchMe = async (
   payload: Partial<User>,
-  cookieHeader?: string
+  cookieHeader?: string,
 ): Promise<User> => {
   const res = await axios.patch(`${baseURL}/users/me`, payload, {
     headers: { Cookie: cookieHeader ?? "" },
-    withCredentials: true
+    withCredentials: true,
   });
   return res.data as User;
 };
@@ -45,12 +45,12 @@ export type ServerFetchNotesResponse = {
 
 export const serverFetchNotes = async (
   params: { page?: number; perPage?: number; search?: string; tag?: string },
-  cookieHeader?: string
+  cookieHeader?: string,
 ): Promise<ServerFetchNotesResponse> => {
   const res = await axios.get(`${baseURL}/notes`, {
     params,
     headers: { Cookie: cookieHeader ?? "" },
-    withCredentials: true
+    withCredentials: true,
   });
 
   const data = res.data as ServerFetchNotesResponse | Note[];
@@ -59,7 +59,7 @@ export const serverFetchNotes = async (
       data,
       totalPages: 1,
       page: 1,
-      perPage: data.length
+      perPage: data.length,
     } as ServerFetchNotesResponse;
   }
   return data as ServerFetchNotesResponse;
@@ -67,22 +67,22 @@ export const serverFetchNotes = async (
 
 export const serverGetNote = async (
   id: string,
-  cookieHeader?: string
+  cookieHeader?: string,
 ): Promise<Note> => {
   const res = await axios.get(`${baseURL}/notes/${id}`, {
     headers: { Cookie: cookieHeader ?? "" },
-    withCredentials: true
+    withCredentials: true,
   });
   return res.data as Note;
 };
 
 export const serverCreateNote = async (
   payload: { title: string; content: string; tag: string },
-  cookieHeader?: string
+  cookieHeader?: string,
 ) => {
   const res = await axios.post(`${baseURL}/notes`, payload, {
     headers: { Cookie: cookieHeader ?? "" },
-    withCredentials: true
+    withCredentials: true,
   });
   return res.data as Note;
 };
@@ -90,7 +90,7 @@ export const serverCreateNote = async (
 export const serverDeleteNote = async (id: string, cookieHeader?: string) => {
   const res = await axios.delete(`${baseURL}/notes/${id}`, {
     headers: { Cookie: cookieHeader ?? "" },
-    withCredentials: true
+    withCredentials: true,
   });
   return res.data as Note;
 };
